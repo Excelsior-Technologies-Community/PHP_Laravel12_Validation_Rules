@@ -1,8 +1,11 @@
 #  PHP_Laravel12_Validation_Rules
 
-![Laravel](https://img.shields.io/badge/Laravel-12-red)
-![PHP](https://img.shields.io/badge/PHP-8.x-blue)
-![Spatie](https://img.shields.io/badge/Spatie-Validation%20Rules-orange)
+<p align="center">
+<img src="https://img.shields.io/badge/Laravel-12-red" alt="Laravel 12">
+<img src="https://img.shields.io/badge/PHP-8.x-blue" alt="PHP">
+<img src="https://img.shields.io/badge/Spatie-Validation%20Rules-orange" alt="Spatie">
+<img src="https://img.shields.io/badge/Status-Working-success" alt="Status">
+</p>
 
 ---
 
@@ -80,6 +83,7 @@ Terminal me:
 
 ```bash
 composer create-project laravel/laravel spatie-demo
+
 php artisan serve
 ```
 
@@ -89,6 +93,7 @@ php artisan serve
 
 ```bash
 composer require spatie/laravel-validation-rules
+
 composer require league/iso3166
 ```
 
@@ -113,10 +118,15 @@ DB_PASSWORD=
 
 ```bash
 php artisan make:model Product –m
+
 php artisan make:model Order –m
+
 php artisan make:controller OrderController
+
 php artisan make:request StoreOrderRequest
+
 php artisan make:policy OrderPolicy --model=Order
+
 php artisan make:seeder ProductSeeder
 ```
 
