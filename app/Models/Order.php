@@ -10,10 +10,12 @@ class Order extends Model
         'country',
         'currency',
         'status',
-        'product_ids'
+        'product_ids',
+        'emails',
     ];
 
     protected $casts = [
-        'product_ids' => 'array'
+        'product_ids' => 'array',
+        'emails' => 'array',
     ];
 }

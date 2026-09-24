@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Spatie\ValidationRules\Rules\CountryCode;
 use Spatie\ValidationRules\Rules\Currency;
 use Spatie\ValidationRules\Rules\ModelsExist;
@@ -11,51 +13,120 @@ use Spatie\ValidationRules\Rules\Authorized;
 use Illuminate\Validation\Rule;
 use App\Models\Product;
 use App\Models\Order;
+use App\Models\ValidationFailure;
 use App\Enums\OrderStatus;
 
 class StoreOrderRequest extends FormRequest
 {
-    // Allow request authorization
+    /**
+     * Allow request authorization.
+     */
     public function authorize(): bool
     {
         return true;
     }
 
-    // Validation rules for order form
+    /**
+     * Validation rules.
+     */
     public function rules(): array
     {
         return [
 
-            // Validate ISO country code (example: IN)
-            'country' => ['required', new CountryCode()],
-
-            // Validate ISO currency code (example: INR)
-            'currency' => ['required', new Currency()],
-
-            // Validate status using Enum values
-            'status' => [
+            /*
+            |--------------------------------------------------------------------------
+            | ISO Country Code
+            |--------------------------------------------------------------------------
+            */
+            'country' => [
                 'required',
-                Rule::enum(OrderStatus::class)
+                new CountryCode(),
             ],
 
-            // Validate selected product IDs exist in products table
+            /*
+            |--------------------------------------------------------------------------
+            | ISO Currency Code
+            |--------------------------------------------------------------------------
+            */
+            'currency' => [
+                'required',
+                new Currency(),
+            ],
+
+            /*
+            |--------------------------------------------------------------------------
+            | Enum Validation
+            |--------------------------------------------------------------------------
+            */
+            'status' => [
+                'required',
+                Rule::enum(OrderStatus::class),
+            ],
+
+            /*
+            |--------------------------------------------------------------------------
+            | Product Existence Validation
+            |--------------------------------------------------------------------------
+            */
             'product_ids' => [
                 'required',
                 'array',
                 new ModelsExist(Product::class),
             ],
 
-            // Validate comma separated emails
+            /*
+            |--------------------------------------------------------------------------
+            | Delimited Email Validation
+            |--------------------------------------------------------------------------
+            */
             'emails' => [
                 'required',
-                new Delimited('email')
+                new Delimited('email'),
             ],
 
-            // Check if user is authorized to update order (policy check)
+            /*
+            |--------------------------------------------------------------------------
+            | Policy Authorization Validation
+            |--------------------------------------------------------------------------
+            */
             'order_id' => [
                 'nullable',
-                new Authorized('update', Order::class)
+                new Authorized('update', Order::class),
             ],
         ];
+    }
+
+    /**
+     * Record validation failures before redirecting back.
+     */
+    protected function failedValidation(Validator $validator): void
+    {
+        ValidationFailure::create([
+            'form_type' => 'order',
+
+            'failed_fields' => array_keys(
+                $validator->errors()->toArray()
+            ),
+
+            'errors' => $validator->errors()->toArray(),
+
+            'input_data' => [
+                'country' => $this->input('country'),
+                'currency' => $this->input('currency'),
+                'status' => $this->input('status'),
+                'product_ids' => $this->input('product_ids', []),
+                'emails' => $this->input('emails'),
+            ],
+
+            'ip_address' => $this->ip(),
+
+            'user_agent' => $this->userAgent(),
+        ]);
+
+        throw new HttpResponseException(
+            back()
+                ->withInput()
+                ->withErrors($validator)
+        );
     }
 }

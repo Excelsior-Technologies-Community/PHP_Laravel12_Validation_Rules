@@ -1,193 +1,295 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-    <title>Create Order</title>
 
-    <style>
+    <meta charset="UTF-8">
 
-    * {
-        box-sizing: border-box;
-        font-family: "Segoe UI", Tahoma, sans-serif;
-    }
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    body {
-        background: linear-gradient(135deg,#eef2f7,#dfe6ee);
-        margin: 0;
-        padding: 40px;
-    }
+    <title>Create Order - Validation Rules</title>
 
-    .container {
-        width: 520px;
-        margin: auto;
-        background: #ffffff;
-        padding: 35px;
-        border-radius: 14px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-        transition: 0.3s;
-    }
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
 
-    h2 {
-        text-align: center;
-        margin-bottom: 30px;
-        color: #2c3e50;
-        font-weight: 600;
-    }
-
-    label {
-        font-weight: 600;
-        color: #34495e;
-        margin-top: 18px;
-        display: block;
-    }
-
-    input[type="text"],
-    select {
-        width: 100%;
-        padding: 12px;
-        margin-top: 6px;
-        border-radius: 8px;
-        border: 1px solid #dcdfe6;
-        background: #fafafa;
-        transition: all 0.25s ease;
-        font-size: 14px;
-    }
-
-    input:focus,
-    select:focus {
-        border-color: #4CAF50;
-        background: #fff;
-        box-shadow: 0 0 0 3px rgba(76,175,80,0.15);
-        outline: none;
-    }
-
-    .products {
-        margin-top: 8px;
-        padding: 15px;
-        border-radius: 10px;
-        border: 1px solid #e1e5eb;
-        background: #fafbfc;
-    }
-
-    .products label {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        font-weight: 500;
-        margin-bottom: 8px;
-        cursor: pointer;
-    }
-
-    input[type="checkbox"] {
-        transform: scale(1.2);
-        cursor: pointer;
-    }
-
-    button {
-        width: 100%;
-        margin-top: 25px;
-        padding: 14px;
-        border: none;
-        border-radius: 10px;
-        background: linear-gradient(135deg,#4CAF50,#43a047);
-        color: white;
-        font-size: 16px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-
-    button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 15px rgba(76,175,80,0.3);
-    }
-
-    .success {
-        background: #e8f5e9;
-        color: #2e7d32;
-        padding: 12px;
-        border-radius: 8px;
-        margin-bottom: 15px;
-        font-weight: 500;
-    }
-
-    .errors {
-        background: #ffebee;
-        color: #c62828;
-        padding: 12px;
-        border-radius: 8px;
-        margin-bottom: 15px;
-    }
-
-    ul {
-        margin: 0;
-        padding-left: 20px;
-    }
-
-    /* Responsive */
-    @media(max-width:600px){
-        .container{
-            width:100%;
-            padding:25px;
-        }
-    }
-
-</style>
 </head>
 
-<body>
+<body class="bg-light">
 
-<div class="container">
+<nav class="navbar navbar-dark bg-dark">
 
-<h2>Create Order</h2>
+    <div class="container">
 
-@if(session('success'))
-<div class="success">
-    {{ session('success') }}
-</div>
-@endif
+        <a
+            href="{{ route('order.create') }}"
+            class="navbar-brand fw-bold"
+        >
+            Validation Rules Demo
+        </a>
 
-@if($errors->any())
-<div class="errors">
-<ul>
-@foreach($errors->all() as $error)
-<li>{{ $error }}</li>
-@endforeach
-</ul>
-</div>
-@endif
+        <div>
 
-<form method="POST" action="{{ route('order.store') }}">
-@csrf
+            <a
+                href="{{ route('validation.dashboard') }}"
+                class="btn btn-outline-light btn-sm me-2"
+            >
+                📊 Dashboard
+            </a>
 
-<label>Country Code</label>
-<input type="text" name="country" placeholder="IN">
+            <a
+                href="{{ route('orders.index') }}"
+                class="btn btn-outline-light btn-sm"
+            >
+                🔎 Orders
+            </a>
 
-<label>Currency</label>
-<input type="text" name="currency" placeholder="INR">
+        </div>
 
-<label>Status</label>
-<select name="status">
-    <option value="pending">Pending</option>
-    <option value="processing">Processing</option>
-    <option value="delivered">Delivered</option>
-</select>
+    </div>
 
-<label>Products</label>
-<div class="products">
-@foreach($products as $product)
-<label>
-<input type="checkbox" name="product_ids[]" value="{{ $product->id }}">
-{{ $product->name }}
-</label>
-@endforeach
-</div>
+</nav>
 
-<label>Emails (comma separated)</label>
-<input type="text" name="emails" placeholder="a@gmail.com,b@gmail.com">
 
-<button type="submit">Submit Order</button>
+<div class="container py-5">
 
-</form>
+    <div class="row justify-content-center">
+
+        <div class="col-lg-7">
+
+            <div class="card shadow border-0">
+
+                <div class="card-header bg-primary text-white">
+
+                    <h4 class="mb-0">
+                        Create Order
+                    </h4>
+
+                </div>
+
+                <div class="card-body p-4">
+
+                    @if(session('success'))
+
+                        <div class="alert alert-success">
+
+                            {{ session('success') }}
+
+                        </div>
+
+                    @endif
+
+
+                    @if($errors->any())
+
+                        <div class="alert alert-danger">
+
+                            <h6 class="fw-bold">
+                                Validation Failed
+                            </h6>
+
+                            <ul class="mb-0">
+
+                                @foreach($errors->all() as $error)
+
+                                    <li>
+                                        {{ $error }}
+                                    </li>
+
+                                @endforeach
+
+                            </ul>
+
+                        </div>
+
+                    @endif
+
+
+                    <form
+                        method="POST"
+                        action="{{ route('order.store') }}"
+                    >
+
+                        @csrf
+
+
+                        {{-- Country --}}
+
+                        <div class="mb-3">
+
+                            <label class="form-label fw-bold">
+                                Country Code
+                            </label>
+
+                            <input
+                                type="text"
+                                name="country"
+                                value="{{ old('country') }}"
+                                class="form-control"
+                                placeholder="IN"
+                            >
+
+                            <div class="form-text">
+                                ISO country code, e.g. IN, US, GB
+                            </div>
+
+                        </div>
+
+
+                        {{-- Currency --}}
+
+                        <div class="mb-3">
+
+                            <label class="form-label fw-bold">
+                                Currency
+                            </label>
+
+                            <input
+                                type="text"
+                                name="currency"
+                                value="{{ old('currency') }}"
+                                class="form-control"
+                                placeholder="INR"
+                            >
+
+                            <div class="form-text">
+                                ISO currency code, e.g. INR, USD, GBP
+                            </div>
+
+                        </div>
+
+
+                        {{-- Status --}}
+
+                        <div class="mb-3">
+
+                            <label class="form-label fw-bold">
+                                Order Status
+                            </label>
+
+                            <select
+                                name="status"
+                                class="form-select"
+                            >
+
+                                <option value="">
+                                    Select Status
+                                </option>
+
+                                <option
+                                    value="pending"
+                                    {{ old('status') === 'pending' ? 'selected' : '' }}
+                                >
+                                    Pending
+                                </option>
+
+                                <option
+                                    value="processing"
+                                    {{ old('status') === 'processing' ? 'selected' : '' }}
+                                >
+                                    Processing
+                                </option>
+
+                                <option
+                                    value="delivered"
+                                    {{ old('status') === 'delivered' ? 'selected' : '' }}
+                                >
+                                    Delivered
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        {{-- Products --}}
+
+                        <div class="mb-3">
+
+                            <label class="form-label fw-bold">
+                                Products
+                            </label>
+
+                            <div class="border rounded p-3 bg-light">
+
+                                @foreach($products as $product)
+
+                                    <div class="form-check mb-2">
+
+                                        <input
+                                            type="checkbox"
+                                            class="form-check-input"
+                                            name="product_ids[]"
+                                            value="{{ $product->id }}"
+                                            id="product{{ $product->id }}"
+                                            {{ in_array($product->id, old('product_ids', [])) ? 'checked' : '' }}
+                                        >
+
+                                        <label
+                                            class="form-check-label"
+                                            for="product{{ $product->id }}"
+                                        >
+
+                                            {{ $product->name }}
+
+                                            <span class="text-muted">
+                                                ₹{{ number_format($product->price, 2) }}
+                                            </span>
+
+                                        </label>
+
+                                    </div>
+
+                                @endforeach
+
+                            </div>
+
+                        </div>
+
+
+                        {{-- Emails --}}
+
+                        <div class="mb-4">
+
+                            <label class="form-label fw-bold">
+                                Emails
+                            </label>
+
+                            <input
+                                type="text"
+                                name="emails"
+                                value="{{ old('emails') }}"
+                                class="form-control"
+                                placeholder="a@gmail.com,b@gmail.com"
+                            >
+
+                            <div class="form-text">
+                                Enter multiple emails separated by commas.
+                            </div>
+
+                        </div>
+
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary w-100"
+                        >
+                            Submit & Validate Order
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
 
 </div>
 
