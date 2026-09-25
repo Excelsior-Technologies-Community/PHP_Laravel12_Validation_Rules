@@ -14,12 +14,15 @@ class ValidationDashboardController extends Controller
     {
         $totalOrders = Order::count();
 
-        $validationFailures = ValidationFailure::count();
+        $validationFailures =
+            ValidationFailure::count();
 
-        $successfulValidations = $totalOrders;
+        $successfulValidations =
+            $totalOrders;
 
         $totalValidationAttempts =
-            $successfulValidations + $validationFailures;
+            $successfulValidations +
+            $validationFailures;
 
         $pendingOrders = Order::where(
             'status',
@@ -34,6 +37,19 @@ class ValidationDashboardController extends Controller
         $deliveredOrders = Order::where(
             'status',
             'delivered'
+        )->count();
+
+        $todayOrders = Order::whereDate(
+            'created_at',
+            today()
+        )->count();
+
+        $weekOrders = Order::whereBetween(
+            'created_at',
+            [
+                now()->startOfWeek(),
+                now()->endOfWeek(),
+            ]
         )->count();
 
         $countryStats = Order::selectRaw(
@@ -57,13 +73,14 @@ class ValidationDashboardController extends Controller
             ->orderByDesc('total')
             ->get();
 
-        $recentOrders = Order::latest()
+        $recentOrders = Order::oldest()
             ->take(5)
             ->get();
 
-        $recentFailures = ValidationFailure::latest()
-            ->take(5)
-            ->get();
+        $recentFailures =
+            ValidationFailure::oldest()
+                ->take(5)
+                ->get();
 
         return view(
             'validation.dashboard',
@@ -75,6 +92,8 @@ class ValidationDashboardController extends Controller
                 'pendingOrders',
                 'processingOrders',
                 'deliveredOrders',
+                'todayOrders',
+                'weekOrders',
                 'countryStats',
                 'currencyStats',
                 'statusStats',
@@ -92,9 +111,11 @@ class ValidationDashboardController extends Controller
         $query = ValidationFailure::query();
 
         if (request()->filled('search')) {
+
             $search = request('search');
 
             $query->where(function ($q) use ($search) {
+
                 $q->whereJsonContains(
                     'failed_fields',
                     $search
@@ -113,8 +134,8 @@ class ValidationDashboardController extends Controller
         }
 
         $failures = $query
-            ->latest()
-            ->paginate(10)
+            ->oldest()
+            ->paginate(5)
             ->withQueryString();
 
         return view(
