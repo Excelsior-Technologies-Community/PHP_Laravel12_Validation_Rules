@@ -97,7 +97,7 @@ class StoreOrderRequest extends FormRequest
     }
 
     /**
-     * Record validation failures before redirecting back.
+     * Record validation failures.
      */
     protected function failedValidation(Validator $validator): void
     {
@@ -116,6 +116,7 @@ class StoreOrderRequest extends FormRequest
                 'status' => $this->input('status'),
                 'product_ids' => $this->input('product_ids', []),
                 'emails' => $this->input('emails'),
+                'order_id' => $this->input('order_id'),
             ],
 
             'ip_address' => $this->ip(),
