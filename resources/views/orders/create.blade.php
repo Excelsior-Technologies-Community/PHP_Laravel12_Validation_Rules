@@ -1,287 +1,370 @@
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
 
     <meta charset="UTF-8">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Create Order - Validation Rules</title>
+    <title>⚡ Real-Time Create Order - Validation Studio</title>
 
-    <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-        rel="stylesheet"
-    >
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        .live-badge {
+            font-size: 12px;
+            font-weight: 700;
+            margin-top: 4px;
+            display: inline-block;
+            transition: all 0.25s ease;
+        }
+
+        .live-badge.valid {
+            color: #198754;
+            background: #e8f5e9;
+            padding: 3px 8px;
+            border-radius: 6px;
+        }
+
+        .live-badge.invalid {
+            color: #dc3545;
+            background: #ffebee;
+            padding: 3px 8px;
+            border-radius: 6px;
+        }
+    </style>
 
 </head>
 
 <body class="bg-light">
 
-<nav class="navbar navbar-dark bg-dark">
+    <nav class="navbar navbar-dark bg-dark">
 
-    <div class="container">
+        <div class="container">
 
-        <a
-            href="{{ route('order.create') }}"
-            class="navbar-brand fw-bold"
-        >
-            Validation Rules Demo
-        </a>
+            <a href="{{ route('order.create') }}" class="navbar-brand fw-bold">
 
-        <div>
+                ⚡ Validation Rules & Live Studio
 
-            <a
-                href="{{ route('validation.dashboard') }}"
-                class="btn btn-outline-light btn-sm me-2"
-            >
-                📊 Dashboard
             </a>
 
-            <a
-                href="{{ route('orders.index') }}"
-                class="btn btn-outline-light btn-sm"
-            >
-                🔎 Orders
-            </a>
+
+            <div>
+
+                <a href="{{ route('validation.dashboard') }}" class="btn btn-outline-light btn-sm me-2">
+
+                    📊 Analytics & Heatmap
+
+                </a>
+
+
+                <a href="{{ route('orders.index') }}" class="btn btn-outline-light btn-sm">
+
+                    🔎 Orders List
+
+                </a>
+
+            </div>
 
         </div>
 
-    </div>
-
-</nav>
+    </nav>
 
 
-<div class="container py-5">
+    <div class="container py-5">
 
-    <div class="row justify-content-center">
+        <div class="row justify-content-center">
 
-        <div class="col-lg-7">
+            <div class="col-lg-8">
 
-            <div class="card shadow border-0">
+                <div class="card shadow border-0">
 
-                <div class="card-header bg-primary text-white">
+                    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
 
-                    <h4 class="mb-0">
-                        Create Order
-                    </h4>
+                        <h4 class="mb-0">
 
-                </div>
+                            ✨ Create Order with Live Validation
 
-                <div class="card-body p-4">
-
-                    @if(session('success'))
-
-                        <div class="alert alert-success">
-
-                            {{ session('success') }}
-
-                        </div>
-
-                    @endif
+                        </h4>
 
 
-                    @if($errors->any())
+                        <span class="badge bg-light text-primary fw-bold">
 
-                        <div class="alert alert-danger">
+                            ⚡ AJAX Instant Check
 
-                            <h6 class="fw-bold">
-                                Validation Failed
-                            </h6>
+                        </span>
 
-                            <ul class="mb-0">
-
-                                @foreach($errors->all() as $error)
-
-                                    <li>
-                                        {{ $error }}
-                                    </li>
-
-                                @endforeach
-
-                            </ul>
-
-                        </div>
-
-                    @endif
+                    </div>
 
 
-                    <form
-                        method="POST"
-                        action="{{ route('order.store') }}"
-                    >
+                    <div class="card-body p-4">
 
-                        @csrf
+                        @if(session('success'))
 
+                            <div class="alert alert-success alert-dismissible fade show">
 
-                        {{-- Country --}}
+                                {{ session('success') }}
 
-                        <div class="mb-3">
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
 
-                            <label class="form-label fw-bold">
-                                Country Code
-                            </label>
-
-                            <input
-                                type="text"
-                                name="country"
-                                value="{{ old('country') }}"
-                                class="form-control"
-                                placeholder="IN"
-                            >
-
-                            <div class="form-text">
-                                ISO country code, e.g. IN, US, GB
                             </div>
 
-                        </div>
+                        @endif
 
 
-                        {{-- Currency --}}
+                        @if($errors->any())
 
-                        <div class="mb-3">
+                            <div class="alert alert-danger">
 
-                            <label class="form-label fw-bold">
-                                Currency
-                            </label>
+                                <h6 class="fw-bold">
 
-                            <input
-                                type="text"
-                                name="currency"
-                                value="{{ old('currency') }}"
-                                class="form-control"
-                                placeholder="INR"
-                            >
+                                    ❌ Form Validation Failed:
 
-                            <div class="form-text">
-                                ISO currency code, e.g. INR, USD, GBP
+                                </h6>
+
+
+                                <ul class="mb-0">
+
+                                    @foreach($errors->all() as $error)
+
+                                        <li>{{ $error }}</li>
+
+                                    @endforeach
+
+                                </ul>
+
                             </div>
 
-                        </div>
+                        @endif
 
 
-                        {{-- Status --}}
+                        <form method="POST" action="{{ route('order.store') }}" id="orderForm">
 
-                        <div class="mb-3">
-
-                            <label class="form-label fw-bold">
-                                Order Status
-                            </label>
-
-                            <select
-                                name="status"
-                                class="form-select"
-                            >
-
-                                <option value="">
-                                    Select Status
-                                </option>
-
-                                <option
-                                    value="pending"
-                                    {{ old('status') === 'pending' ? 'selected' : '' }}
-                                >
-                                    Pending
-                                </option>
-
-                                <option
-                                    value="processing"
-                                    {{ old('status') === 'processing' ? 'selected' : '' }}
-                                >
-                                    Processing
-                                </option>
-
-                                <option
-                                    value="delivered"
-                                    {{ old('status') === 'delivered' ? 'selected' : '' }}
-                                >
-                                    Delivered
-                                </option>
-
-                            </select>
-
-                        </div>
+                            @csrf
 
 
-                        {{-- Products --}}
+                            <div class="row">
 
-                        <div class="mb-3">
+                                {{-- Country --}}
 
-                            <label class="form-label fw-bold">
-                                Products
-                            </label>
+                                <div class="col-md-6 mb-3">
 
-                            <div class="border rounded p-3 bg-light">
+                                    <label class="form-label fw-bold">
 
-                                @foreach($products as $product)
+                                        Country Code <span class="text-danger">*</span>
 
-                                    <div class="form-check mb-2">
+                                    </label>
 
-                                        <input
-                                            type="checkbox"
-                                            class="form-check-input"
-                                            name="product_ids[]"
-                                            value="{{ $product->id }}"
-                                            id="product{{ $product->id }}"
-                                            {{ in_array($product->id, old('product_ids', [])) ? 'checked' : '' }}
-                                        >
 
-                                        <label
-                                            class="form-check-label"
-                                            for="product{{ $product->id }}"
-                                        >
+                                    <input type="text" name="country" id="field_country" value="{{ old('country') }}" class="form-control" placeholder="IN, US, GB" required onkeyup="validateLiveField('country', this.value)">
 
-                                            {{ $product->name }}
 
-                                            <span class="text-muted">
-                                                ₹{{ number_format($product->price, 2) }}
-                                            </span>
+                                    <div id="feedback_country" class="live-badge"></div>
 
-                                        </label>
+
+                                    <div class="form-text">
+
+                                        ISO country code (e.g. IN, US, GB)
 
                                     </div>
 
-                                @endforeach
+                                </div>
+
+
+                                {{-- Currency --}}
+
+                                <div class="col-md-6 mb-3">
+
+                                    <label class="form-label fw-bold">
+
+                                        Currency <span class="text-danger">*</span>
+
+                                    </label>
+
+
+                                    <input type="text" name="currency" id="field_currency" value="{{ old('currency') }}" class="form-control" placeholder="INR, USD, EUR" required onkeyup="validateLiveField('currency', this.value)">
+
+
+                                    <div id="feedback_currency" class="live-badge"></div>
+
+
+                                    <div class="form-text">
+
+                                        ISO currency code (e.g. INR, USD, EUR)
+
+                                    </div>
+
+                                </div>
 
                             </div>
 
-                        </div>
+
+                            <div class="row">
+
+                                {{-- GSTIN / Tax ID --}}
+
+                                <div class="col-md-6 mb-3">
+
+                                    <label class="form-label fw-bold">
+
+                                        GSTIN / Tax ID <span class="badge bg-secondary">Custom Rule</span>
+
+                                    </label>
 
 
-                        {{-- Emails --}}
+                                    <input type="text" name="gstin" id="field_gstin" value="{{ old('gstin') }}" class="form-control text-uppercase" placeholder="29AAAAA0000A1Z5" onkeyup="validateLiveField('gstin', this.value)">
 
-                        <div class="mb-4">
 
-                            <label class="form-label fw-bold">
-                                Emails
-                            </label>
+                                    <div id="feedback_gstin" class="live-badge"></div>
 
-                            <input
-                                type="text"
-                                name="emails"
-                                value="{{ old('emails') }}"
-                                class="form-control"
-                                placeholder="a@gmail.com,b@gmail.com"
-                            >
 
-                            <div class="form-text">
-                                Enter multiple emails separated by commas.
+                                    <div class="form-text">
+
+                                        15-character GSTIN or Tax Identification Number
+
+                                    </div>
+
+                                </div>
+
+
+                                {{-- International Phone --}}
+
+                                <div class="col-md-6 mb-3">
+
+                                    <label class="form-label fw-bold">
+
+                                        Phone Number <span class="badge bg-secondary">Intl Rule</span>
+
+                                    </label>
+
+
+                                    <input type="text" name="phone" id="field_phone" value="{{ old('phone') }}" class="form-control" placeholder="+919876543210" onkeyup="validateLiveField('phone', this.value)">
+
+
+                                    <div id="feedback_phone" class="live-badge"></div>
+
+
+                                    <div class="form-text">
+
+                                        Phone with country code (e.g. +919876543210)
+
+                                    </div>
+
+                                </div>
+
                             </div>
 
-                        </div>
+
+                            {{-- Order Status --}}
+
+                            <div class="mb-3">
+
+                                <label class="form-label fw-bold">
+
+                                    Order Status <span class="text-danger">*</span>
+
+                                </label>
 
 
-                        <button
-                            type="submit"
-                            class="btn btn-primary w-100"
-                        >
-                            Submit & Validate Order
-                        </button>
+                                <select name="status" id="field_status" class="form-select" onchange="validateLiveField('status', this.value)">
 
-                    </form>
+                                    <option value="">Select Status</option>
+
+                                    <option value="pending" {{ old('status') === 'pending' ? 'selected' : '' }}>Pending</option>
+
+                                    <option value="processing" {{ old('status') === 'processing' ? 'selected' : '' }}>Processing</option>
+
+                                    <option value="delivered" {{ old('status') === 'delivered' ? 'selected' : '' }}>Delivered</option>
+
+                                </select>
+
+
+                                <div id="feedback_status" class="live-badge"></div>
+
+                            </div>
+
+
+                            {{-- Products --}}
+
+                            <div class="mb-3">
+
+                                <label class="form-label fw-bold">
+
+                                    Products <span class="text-danger">*</span>
+
+                                </label>
+
+
+                                <div class="border rounded p-3 bg-light">
+
+                                    @foreach($products as $product)
+
+                                        <div class="form-check mb-2">
+
+                                            <input type="checkbox" class="form-check-input product-check" name="product_ids[]" value="{{ $product->id }}" id="product{{ $product->id }}" {{ in_array($product->id, old('product_ids', [])) ? 'checked' : '' }} onchange="validateProductsLive()">
+
+
+                                            <label class="form-check-label" for="product{{ $product->id }}">
+
+                                                {{ $product->name }}
+
+                                                <span class="text-muted fw-bold">
+
+                                                    ₹{{ number_format($product->price, 2) }}
+
+                                                </span>
+
+                                            </label>
+
+                                        </div>
+
+                                    @endforeach
+
+                                </div>
+
+
+                                <div id="feedback_product_ids" class="live-badge"></div>
+
+                            </div>
+
+
+                            {{-- Emails --}}
+
+                            <div class="mb-4">
+
+                                <label class="form-label fw-bold">
+
+                                    Recipient Emails <span class="text-danger">*</span>
+
+                                </label>
+
+
+                                <input type="text" name="emails" id="field_emails" value="{{ old('emails') }}" class="form-control" placeholder="admin@example.com, user@domain.com" required onkeyup="validateLiveField('emails', this.value)">
+
+
+                                <div id="feedback_emails" class="live-badge"></div>
+
+
+                                <div class="form-text">
+
+                                    Delimited list of emails separated by commas (Spatie Delimited Rule)
+
+                                </div>
+
+                            </div>
+
+
+                            <button type="submit" class="btn btn-primary w-100 btn-lg shadow-sm">
+
+                                🚀 Submit & Validate Order
+
+                            </button>
+
+                        </form>
+
+                    </div>
 
                 </div>
 
@@ -291,7 +374,91 @@
 
     </div>
 
-</div>
+
+    <script>
+
+        let debounceTimer;
+
+
+        function validateLiveField(fieldName, value) {
+
+            clearTimeout(debounceTimer);
+
+            debounceTimer = setTimeout(() => {
+
+                if (!value || value.trim() === '') {
+
+                    const badge = document.getElementById(`feedback_${fieldName}`);
+
+                    if (badge) { badge.innerHTML = ''; badge.className = 'live-badge'; }
+
+                    return;
+
+                }
+
+
+                fetch('{{ route("order.validate-field") }}', {
+
+                    method: 'POST',
+
+                    headers: {
+
+                        'Content-Type': 'application/json',
+
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+
+                        'Accept': 'application/json'
+
+                    },
+
+                    body: JSON.stringify({ field: fieldName, value: value })
+
+                })
+
+                .then(res => res.json())
+
+                .then(data => {
+
+                    const badge = document.getElementById(`feedback_${fieldName}`);
+
+                    if (!badge) return;
+
+
+                    if (data.valid) {
+
+                        badge.innerHTML = `✓ ${data.message}`;
+
+                        badge.className = 'live-badge valid';
+
+                    } else {
+
+                        badge.innerHTML = `✕ ${data.message}`;
+
+                        badge.className = 'live-badge invalid';
+
+                    }
+
+                })
+
+                .catch(err => console.error(err));
+
+            }, 300);
+
+        }
+
+
+        function validateProductsLive() {
+
+            const checkboxes = document.querySelectorAll('.product-check:checked');
+
+            const selected = Array.from(checkboxes).map(cb => cb.value);
+
+            validateLiveField('product_ids', selected);
+
+        }
+
+    </script>
 
 </body>
+
 </html>

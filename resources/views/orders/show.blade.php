@@ -1,255 +1,281 @@
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
 
     <meta charset="UTF-8">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Order #{{ $order->id }}</title>
 
-    <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-        rel="stylesheet"
-    >
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
 </head>
 
 <body class="bg-light">
 
-<nav class="navbar navbar-dark bg-dark">
+    <nav class="navbar navbar-dark bg-dark">
 
-    <div class="container">
+        <div class="container">
 
-        <a
-            href="{{ route('orders.index') }}"
-            class="navbar-brand fw-bold"
-        >
-            Validation Rules Demo
-        </a>
+            <a href="{{ route('orders.index') }}" class="navbar-brand fw-bold">
 
-        <a
-            href="{{ route('orders.index') }}"
-            class="btn btn-outline-light btn-sm"
-        >
-            ← Orders
-        </a>
+                Validation Rules Demo
 
-    </div>
-
-</nav>
+            </a>
 
 
-<div class="container py-5">
+            <a href="{{ route('orders.index') }}" class="btn btn-outline-light btn-sm">
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
+                ← Back to Orders
 
-        <div>
-
-            <h2 class="fw-bold">
-                Order #{{ $order->id }}
-            </h2>
-
-            <p class="text-muted">
-                Complete order information
-            </p>
-
-        </div>
-
-        <div>
-
-            <a
-                href="{{ route('orders.edit', $order) }}"
-                class="btn btn-warning"
-            >
-                ✏️ Edit
             </a>
 
         </div>
 
-    </div>
+    </nav>
 
 
-    <div class="row g-4">
+    <div class="container py-5">
 
-        <div class="col-md-6">
+        <div class="d-flex justify-content-between align-items-center mb-4">
 
-            <div class="card shadow-sm border-0">
+            <div>
 
-                <div class="card-body">
+                <h2 class="fw-bold">
 
-                    <h5 class="fw-bold">
-                        Order Information
-                    </h5>
+                    Order #{{ $order->id }}
 
-                    <hr>
+                </h2>
 
-                    <p>
-                        <strong>Order ID:</strong>
-                        #{{ $order->id }}
-                    </p>
 
-                    <p>
-                        <strong>Country:</strong>
-                        <span class="badge bg-secondary">
-                            {{ $order->country }}
-                        </span>
-                    </p>
+                <p class="text-muted mb-0">
 
-                    <p>
-                        <strong>Currency:</strong>
-                        <span class="badge bg-info text-dark">
-                            {{ $order->currency }}
-                        </span>
-                    </p>
+                    Complete validated order detail summary
 
-                    <p>
-                        <strong>Status:</strong>
+                </p>
 
-                        @if($order->status === 'pending')
+            </div>
 
-                            <span class="badge bg-warning text-dark">
-                                Pending
-                            </span>
 
-                        @elseif($order->status === 'processing')
+            <div>
 
-                            <span class="badge bg-primary">
-                                Processing
-                            </span>
+                <a href="{{ route('orders.edit', $order) }}" class="btn btn-warning">
 
-                        @else
+                    ✏️ Edit Order
 
-                            <span class="badge bg-success">
-                                Delivered
-                            </span>
-
-                        @endif
-
-                    </p>
-
-                    <p>
-                        <strong>Created:</strong>
-                        {{ $order->created_at->format('d M Y H:i:s') }}
-                    </p>
-
-                    <p class="mb-0">
-                        <strong>Updated:</strong>
-                        {{ $order->updated_at->format('d M Y H:i:s') }}
-                    </p>
-
-                </div>
+                </a>
 
             </div>
 
         </div>
 
 
-        <div class="col-md-6">
+        <div class="row g-4">
 
-            <div class="card shadow-sm border-0">
+            <div class="col-md-6">
 
-                <div class="card-body">
+                <div class="card shadow-sm border-0">
 
-                    <h5 class="fw-bold">
-                        Email Addresses
-                    </h5>
+                    <div class="card-body">
 
-                    <hr>
+                        <h5 class="fw-bold">
 
-                    @forelse($order->emails ?? [] as $email)
+                            Order & Tax Information
 
-                        <div class="badge bg-light text-dark border mb-2 p-2">
-                            {{ $email }}
-                        </div>
+                        </h5>
 
-                    @empty
 
-                        <p class="text-muted">
-                            No email addresses.
+                        <hr>
+
+
+                        <p>
+
+                            <strong>Order ID:</strong> #{{ $order->id }}
+
                         </p>
 
-                    @endforelse
+
+                        <p>
+
+                            <strong>Country:</strong>
+
+                            <span class="badge bg-secondary">{{ $order->country }}</span>
+
+                        </p>
+
+
+                        <p>
+
+                            <strong>Currency:</strong>
+
+                            <span class="badge bg-info text-dark">{{ $order->currency }}</span>
+
+                        </p>
+
+
+                        <p>
+
+                            <strong>GSTIN / Tax ID:</strong>
+
+                            <span class="badge bg-dark text-warning">{{ $order->gstin ?: 'Not Provided' }}</span>
+
+                        </p>
+
+
+                        <p>
+
+                            <strong>Phone:</strong>
+
+                            <span class="text-primary fw-bold">{{ $order->phone ?: 'Not Provided' }}</span>
+
+                        </p>
+
+
+                        <p>
+
+                            <strong>Status:</strong>
+
+                            @if($order->status === 'pending')
+
+                                <span class="badge bg-warning text-dark">Pending</span>
+
+                            @elseif($order->status === 'processing')
+
+                                <span class="badge bg-primary">Processing</span>
+
+                            @else
+
+                                <span class="badge bg-success">Delivered</span>
+
+                            @endif
+
+                        </p>
+
+
+                        <p>
+
+                            <strong>Created:</strong> {{ $order->created_at->format('d M Y H:i:s') }}
+
+                        </p>
+
+
+                        <p class="mb-0">
+
+                            <strong>Updated:</strong> {{ $order->updated_at->format('d M Y H:i:s') }}
+
+                        </p>
+
+                    </div>
 
                 </div>
 
             </div>
 
-        </div>
+
+            <div class="col-md-6">
+
+                <div class="card shadow-sm border-0">
+
+                    <div class="card-body">
+
+                        <h5 class="fw-bold">
+
+                            Validated Email Addresses
+
+                        </h5>
 
 
-        <div class="col-12">
+                        <hr>
 
-            <div class="card shadow-sm border-0">
 
-                <div class="card-body">
+                        @forelse($order->emails ?? [] as $email)
 
-                    <h5 class="fw-bold">
-                        Selected Products
-                    </h5>
+                            <div class="badge bg-light text-dark border mb-2 p-2 fs-6">
 
-                    <hr>
+                                ✉️ {{ $email }}
 
-                    <div class="table-responsive">
+                            </div>
 
-                        <table class="table table-hover">
+                        @empty
 
-                            <thead>
+                            <p class="text-muted">No email addresses recorded.</p>
 
-                                <tr>
+                        @endforelse
 
-                                    <th>ID</th>
+                    </div>
 
-                                    <th>Product</th>
+                </div>
 
-                                    <th>Price</th>
+            </div>
 
-                                </tr>
 
-                            </thead>
+            <div class="col-12">
 
-                            <tbody>
+                <div class="card shadow-sm border-0">
 
-                                @forelse($products as $product)
+                    <div class="card-body">
+
+                        <h5 class="fw-bold">
+
+                            Selected Products
+
+                        </h5>
+
+
+                        <hr>
+
+
+                        <div class="table-responsive">
+
+                            <table class="table table-hover align-middle">
+
+                                <thead>
 
                                     <tr>
 
-                                        <td>
-                                            #{{ $product->id }}
-                                        </td>
+                                        <th>ID</th>
 
-                                        <td>
-                                            {{ $product->name }}
-                                        </td>
+                                        <th>Product Name</th>
 
-                                        <td>
-                                            ₹{{ number_format($product->price, 2) }}
-                                        </td>
+                                        <th>Price</th>
 
                                     </tr>
 
-                                @empty
+                                </thead>
 
-                                    <tr>
 
-                                        <td
-                                            colspan="3"
-                                            class="text-center text-muted"
-                                        >
-                                            No products found.
-                                        </td>
+                                <tbody>
 
-                                    </tr>
+                                    @forelse($products as $product)
 
-                                @endforelse
+                                        <tr>
 
-                            </tbody>
+                                            <td>#{{ $product->id }}</td>
 
-                        </table>
+                                            <td>{{ $product->name }}</td>
+
+                                            <td>₹{{ number_format($product->price, 2) }}</td>
+
+                                        </tr>
+
+                                    @empty
+
+                                        <tr>
+
+                                            <td colspan="3" class="text-center text-muted">No products assigned.</td>
+
+                                        </tr>
+
+                                    @endforelse
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
 
                     </div>
 
@@ -260,8 +286,6 @@
         </div>
 
     </div>
-
-</div>
 
 </body>
 

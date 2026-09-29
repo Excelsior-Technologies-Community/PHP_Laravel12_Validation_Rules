@@ -13,11 +13,13 @@ class ValidationFailure extends Model
         'input_data',
         'ip_address',
         'user_agent',
+        'is_suspicious',
     ];
 
     protected $casts = [
         'failed_fields' => 'array',
         'errors' => 'array',
         'input_data' => 'array',
+        'is_suspicious' => 'boolean',
     ];
 }
