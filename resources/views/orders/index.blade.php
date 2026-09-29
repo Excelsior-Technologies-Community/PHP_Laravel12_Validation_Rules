@@ -603,6 +603,10 @@
 
                                 <th>Currency</th>
 
+                                <th>GSTIN</th>
+
+                                <th>Phone</th>
+
                                 <th>Status</th>
 
                                 <th>Products</th>
@@ -657,6 +661,24 @@
                                         <span class="badge bg-info text-dark">
                                             {{ $order->currency }}
                                         </span>
+
+                                    </td>
+
+
+                                    <td>
+
+                                        <span class="badge bg-dark text-warning">
+                                            {{ $order->gstin ?: '-' }}
+                                        </span>
+
+                                    </td>
+
+
+                                    <td>
+
+                                        <small class="fw-bold text-muted">
+                                            {{ $order->phone ?: '-' }}
+                                        </small>
 
                                     </td>
 

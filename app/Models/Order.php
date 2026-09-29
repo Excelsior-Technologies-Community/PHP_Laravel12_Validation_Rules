@@ -9,6 +9,8 @@ class Order extends Model
     protected $fillable = [
         'country',
         'currency',
+        'gstin',
+        'phone',
         'status',
         'product_ids',
         'emails',
