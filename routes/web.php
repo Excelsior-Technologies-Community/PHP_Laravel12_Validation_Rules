@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ValidationDashboardController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,6 +15,12 @@ Route::get(
     '/order/create',
     [OrderController::class, 'create']
 )->name('order.create');
+
+// Real-Time Live Validation Endpoint (AJAX)
+Route::post(
+    '/order/validate-field',
+    [OrderController::class, 'validateField']
+)->name('order.validate-field');
 
 // Store / Update order
 Route::post(
@@ -64,10 +70,9 @@ Route::get(
     [OrderController::class, 'export']
 )->name('orders.export');
 
-
 /*
 |--------------------------------------------------------------------------
-| Validation Analytics Routes
+| Validation Analytics & Bot Security Routes
 |--------------------------------------------------------------------------
 */
 
@@ -82,3 +87,8 @@ Route::get(
     '/validation/history',
     [ValidationDashboardController::class, 'history']
 )->name('validation.history');
+
+// Homepage Redirect
+Route::get('/', function () {
+    return redirect()->route('orders.index');
+});
